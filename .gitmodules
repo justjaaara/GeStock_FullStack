@@ -1,0 +1,6 @@
+[submodule "GeStock-Backend"]
+	path = GeStock-Backend
+	url = git@github.com:justjaaara/GeStock-Backend.git
+[submodule "GeStock-Frontend"]
+	path = GeStock-Frontend
+	url = git@github.com:justjaaara/GeStock-Frontend.git

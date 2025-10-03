@@ -71,7 +71,7 @@ Desarrollar un MVP de aplicación web para gestión de inventario que permita:
 
 1. Ejecutar docker. Si no lo tienes descargado, hazlo siguiendo los pasos por la página oficial https://www.docker.com/
 2. Clona el repositorio: `git clone --recurse-submodules https://github.com/justjaaara/GeStock_FullStack.git``
-3. Abre tu editor de código de confianza
+3. Abre tu editor de código de confianza y dentro de él abre la carpeta del proyecto `GeStock_FullStack`
 4. Renombra el archivo `.env.example` a `.env`. No es necesario hacer modificaciones al archivo ya que los parámetros que vienen por defecto sirven.
 5. En una terminal ingresa a la carpeta donde clonaste el repositorio, esta carpeta estará nombrada como `GeStock_FullStack`
 6. Ejecutar el comando `docker compose up --build`. (Este paso tardará un poco ya que descargará las iamágenes necesarias para que funcione la aplicación)

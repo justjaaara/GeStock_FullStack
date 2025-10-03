@@ -5,12 +5,13 @@
 1. [Descripción del Objetivo](#descripción-del-objetivo)
    - [Objetivo Principal (MVP)](#objetivo-principal-mvp)
    - [Alcance Definido](#alcance-definido)
-2. [Funcionamiento de la Aplicación](#funcionamiento-de-la-aplicación)
-3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Flujos Desarrollados al momento](#flujos-desarrollados-al-momento)
+2. [Instrucciones para iniciar la aplicación](#instrucciones-para-ejecutar-el-proyecto)
+3. [Funcionamiento de la Aplicación](#funcionamiento-de-la-aplicación)
+4. [Estructura del Proyecto](#estructura-del-proyecto)
+5. [Flujos Desarrollados al momento](#flujos-desarrollados-al-momento)
    - [1. Sistema de Autenticación Completo](#1-sistema-de-autenticación-completo)
    - [2. Arquitectura de Navegación](#2-arquitectura-de-navegación)
-5. [Flujos Pendientes (Entrega Final)](#flujos-pendientes-entrega-final)
+6. [Flujos Pendientes (Entrega Final)](#flujos-pendientes-entrega-final)
    - [1. Administración de Usuarios y Roles](#1-administración-de-usuarios-y-roles-ges-112-ges-117-ges-152-ges-201)
    - [2. Gestión Completa de Productos](#2-gestión-completa-de-productos-ges-47-ges-58-ges-69-ges-77-ges-85-ges-94-ges-103-ges-131)
    - [3. Sistema RFID y Control de Lotes](#3-sistema-rfid-y-control-de-lotes-ges-159-ges-160)
@@ -18,7 +19,7 @@
    - [5. Módulo de Ventas Básico](#5-módulo-de-ventas-básico-ges-162-ges-164-ges-204-ges-205)
    - [6. Sistema de Reportes y Consolidados](#6-sistema-de-reportes-y-consolidados-ges-166-ges-167-ges-168-ges-206-ges-211-ges-212)
    - [7. Cierres Mensuales](#7-cierres-mensuales-ges-213-ges-214-ges-215)
-6. [Modelo de Datos](#modelo-de-datos)
+7. [Modelo de Datos](#modelo-de-datos)
    - [Entidades del Sistema](#entidades-del-sistema)
      - [Usuarios y Autenticación](#-usuarios-y-autenticación)
      - [Productos](#-productos)
@@ -67,6 +68,18 @@ Desarrollar un MVP de aplicación web para gestión de inventario que permita:
 - Herramientas de predicción con IA
 
 ## Instrucciones para ejecutar el proyecto
+
+1. Ejecutar docker. Si no lo tienes descargado, hazlo siguiendo los pasos por la página oficial https://www.docker.com/
+2. Clona el repositorio: `git clone --recurse-submodules https://github.com/justjaaara/GeStock_FullStack.git``
+3. Abre tu editor de código de confianza
+4. Renombra el archivo `.env.example` a `.env`. No es necesario hacer modificaciones al archivo ya que los parámetros que vienen por defecto sirven.
+5. En una terminal ingresa a la carpeta donde clonaste el repositorio, esta carpeta estará nombrada como `GeStock_FullStack`
+6. Ejecutar el comando `docker compose up --build`. (Este paso tardará un poco ya que descargará las iamágenes necesarias para que funcione la aplicación)
+7. Una vez termine de construirse los contenedores, puedes entrar a http://localhost:8080/login para empezar a probar la aplicación (En caso tal de que presente algún error el backend, solo es cuestión de esperar mientras se inicializa y conecta correctamente con la base de datos, puedes revisar los logs del contenedor en Docker Desktop)
+
+Listo! Ya está corriendo el proyecto y puedes probarlo sin ningún problema.
+
+Si deseas acceder a la documentación de la API del backend debes ingresar a http://localhost:3000/api/docs
 
 ## Funcionamiento de la Aplicación
 

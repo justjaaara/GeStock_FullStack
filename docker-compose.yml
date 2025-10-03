@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   # Base de datos Oracle
@@ -6,11 +5,11 @@ services:
     image: container-registry.oracle.com/database/free:latest
     container_name: gestock-oracle-db
     environment:
-      - ORACLE_PWD=adminadmin
+      - ORACLE_PWD=${ORACLE_PWD}
       - ORACLE_CHARACTERSET=AL32UTF8
-      - ORACLE_PDB=FREEPDB1
-      - INIT_SGA_SIZE=1GB
-      - INIT_PGA_SIZE=512MB
+      - ORACLE_PDB=${ORACLE_PDB}
+      - INIT_SGA_SIZE=${INIT_SGA_SIZE}
+      - INIT_PGA_SIZE=${INIT_PGA_SIZE}
     ports:
       - "1539:1521"
     volumes:
@@ -20,7 +19,7 @@ services:
       - gestock-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "/opt/oracle/checkDBStatus.sh", "FREEPDB1"]
+      test: ["CMD", "/opt/oracle/checkDBStatus.sh", "${ORACLE_PDB}"]
       interval: 30s
       timeout: 10s
       retries: 10
@@ -29,20 +28,20 @@ services:
   # Backend NestJS
   backend:
     build:
-      context: ./GeStock-Backend
-      dockerfile: Dockerfile
+      # context: ./GeStock-Backend
+      image: justjaaara/gestock-backend:latest
     container_name: gestock-backend
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=${NODE_ENV}
       - DB_HOST=oracle-db
-      - DB_PORT=1521
-      - DB_SERVICE_NAME=FREEPDB1
+      - DB_PORT=${DB_PORT}
+      - DB_SERVICE_NAME=${DB_SERVICE_NAME}
       - DB_USERNAME=GESTOCK
-      - DB_PASSWORD=adminadmin
-      - DB_SYNCHRONIZE=true
-      - DB_LOGGING=false
-      - PORT=3000
-      - JWT_SECRET=${JWT_SECRET:-zo2suI4TxGzE1LWQP0x8wbf2zWK6R0exI1dDZ+7eVd0=}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE}
+      - DB_LOGGING=${DB_LOGGING}
+      - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - "3000:3000"
     depends_on:
@@ -56,20 +55,18 @@ services:
   # Frontend Angular
   frontend:
     build:
-      context: ./GeStock-Frontend
-      dockerfile: Dockerfile
+      # context: ./GeStock-Frontend
+      image: justjaaara/gestock-frontend:latest
     container_name: gestock-frontend
     ports:
-      - "80:8080"
+      - "8080:8080"
     depends_on:
       - backend
     networks:
       - gestock-network
     restart: unless-stopped
     environment:
-      - NGINX_HOST=localhost
-      - NGINX_PORT=8080
-      - BACKENDBASEURL='http://localhost:3000/api'
+      - BACKENDBASEURL='http://backend:3000/api'
 
 
 # Volúmenes persistentes

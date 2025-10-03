@@ -27,9 +27,9 @@ services:
 
   # Backend NestJS
   backend:
-    build:
+    # build:
       # context: ./GeStock-Backend
-      image: justjaaara/gestock-backend:latest
+    image: justjaaara/gestock-backend:latest
     container_name: gestock-backend
     environment:
       - NODE_ENV=${NODE_ENV}
@@ -54,9 +54,9 @@ services:
 
   # Frontend Angular
   frontend:
-    build:
+    # build:
       # context: ./GeStock-Frontend
-      image: justjaaara/gestock-frontend:latest
+    image: justjaaara/gestock-frontend:latest
     container_name: gestock-frontend
     ports:
       - "8080:8080"

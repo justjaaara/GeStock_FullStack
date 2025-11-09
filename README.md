@@ -59,9 +59,6 @@ Desarrollar un MVP de aplicación web para gestión de inventario que permita:
 - Salidas de prueba para simular movimientos
 - Reportes de existencias, consolidaciones y cierres mensuales
 - Arquitectura moderna (Angular + NestJS + Oracle)
-
-❌ **Lo que NO se contempla:**
-
 - Sistema de ventas completo con facturación
 - Gestión de pagos o punto de venta real
 - Integración con sistemas ERP externos

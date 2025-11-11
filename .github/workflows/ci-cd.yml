@@ -27,17 +27,17 @@ jobs:
       - name: Instalar dependencias backend
         run: |
           cd GeStock-Backend
-          pnpm install
+          npm install
 
       - name: Compilar backend
         run: |
           cd GeStock-Backend
-          pnpm run build
+          npm run build
 
       - name: Ejecutar pruebas backend
         run: |
           cd GeStock-Backend
-          pnpm test
+          npm test
 
       # ==========================
       # 🎨 FRONTEND
@@ -45,12 +45,12 @@ jobs:
       - name: Instalar dependencias frontend
         run: |
           cd GeStock-Frontend
-          pnpm install
+          npm install
 
       - name: Compilar frontend
         run: |
           cd GeStock-Frontend
-          pnpm run build
+          npm run build
 
       # ==========================
       # 🐳 DOCKER BUILD + PUSH

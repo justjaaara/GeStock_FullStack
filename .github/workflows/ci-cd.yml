@@ -1,0 +1,85 @@
+name: GeStock CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-test-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código (con submódulos)
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      # ==========================
+      # 🔧 BACKEND
+      # ==========================
+      - name: Configurar Node.js para backend
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias backend
+        run: |
+          cd backend
+          npm install
+
+      - name: Compilar backend
+        run: |
+          cd backend
+          npm run build
+
+      - name: Ejecutar pruebas backend
+        run: |
+          cd backend
+          npm test -- --coverage
+
+      # ==========================
+      # 🎨 FRONTEND
+      # ==========================
+      - name: Instalar dependencias frontend
+        run: |
+          cd frontend
+          npm install
+
+      - name: Compilar frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Ejecutar pruebas frontend
+        run: |
+          cd frontend
+          npm test -- --coverage
+
+      # ==========================
+      # 🐳 DOCKER BUILD + PUSH
+      # ==========================
+      - name: Iniciar sesión en DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Backend image
+      - name: Construir imagen Docker backend
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestock-backend:latest ./backend
+
+      - name: Publicar imagen Docker backend
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gestock-backend:latest
+
+      # Frontend image
+      - name: Construir imagen Docker frontend
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestock-frontend:latest ./frontend
+
+      - name: Publicar imagen Docker frontend
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gestock-frontend:latest

@@ -1,0 +1,22 @@
+---
+# PeerAuthentication - Habilitar mTLS en modo permisivo
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: default
+spec:
+  mtls:
+    mode: PERMISSIVE
+
+---
+# AuthorizationPolicy - Permitir todo el tráfico (ajustar según necesidades)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-all
+  namespace: default
+spec:
+  action: ALLOW
+  rules:
+    - {}

@@ -2,37 +2,29 @@
 
 ## Índice
 
-1. [**Descripción** del Objetivo](#**Descripción**-del-objetivo)
+1. [Descripción del Objetivo](#descripción-del-objetivo)
    - [Objetivo Principal (MVP)](#objetivo-principal-mvp)
    - [Alcance Definido](#alcance-definido)
 2. [Requisitos para ejecutar la aplicación](#requisitos-para-ejecutar-el-proyecto)
 3. [Instrucciones para iniciar la aplicación](#instrucciones-para-ejecutar-el-proyecto)
-4. [Funcionamiento de la Aplicación](#funcionamiento-de-la-aplicación)
-5. [Estructura del Proyecto](#estructura-del-proyecto)
-6. [Flujos Desarrollados al momento](#flujos-desarrollados-al-momento)
-   - [1. Sistema de Autenticación Completo](#1-sistema-de-autenticación-completo)
-   - [2. Arquitectura de Navegación](#2-arquitectura-de-navegación)
-7. [Flujos Pendientes (Entrega Final)](#flujos-pendientes-entrega-final)
-   - [1. Administración de Usuarios y Roles](#1-administración-de-usuarios-y-roles-ges-112-ges-117-ges-152-ges-201)
-   - [2. Gestión Completa de Productos](#2-gestión-completa-de-productos-ges-47-ges-58-ges-69-ges-77-ges-85-ges-94-ges-103-ges-131)
-   - [3. Sistema RFID y Control de Lotes](#3-sistema-rfid-y-control-de-lotes-ges-159-ges-160)
-   - [4. Sistema de Alertas y Trazabilidad](#4-sistema-de-alertas-y-trazabilidad-ges-118-ges-119-ges-203)
-   - [5. Módulo de Ventas Básico](#5-módulo-de-ventas-básico-ges-162-ges-164-ges-204-ges-205)
-   - [6. Sistema de Reportes y Consolidados](#6-sistema-de-reportes-y-consolidados-ges-166-ges-167-ges-168-ges-206-ges-211-ges-212)
-   - [7. Cierres Mensuales](#7-cierres-mensuales-ges-213-ges-214-ges-215)
-8. [Modelo de Datos](#modelo-de-datos)
-   - [Entidades del Sistema](#entidades-del-sistema)
-     - [Usuarios y Autenticación](#-usuarios-y-autenticación)
-     - [Productos](#-productos)
-     - [Sistema RFID y Lotes](#-sistema-rfid-y-lotes)
-     - [Control de Inventario](#-control-de-inventario)
-     - [Sistema de Ventas](#-sistema-de-ventas)
-   - [Diagrama de Entidad-Relación](#diagrama-de-entidad-relación)
-9. [Detalle Historias de Usuario](#detalle-historias-de-usuario)
+4. [Despliegue en Kubernetes (Minikube)](#despliegue-en-kubernetes-minikube)
+   - [Requisitos previos](#requisitos-previos)
+   - [Despliegue](#despliegue)
+   - [Arquitectura de Kubernetes](#arquitectura-de-kubernetes)
+5. [Observabilidad con Istio Service Mesh](#️-observabilidad-con-istio-service-mesh)
+   - [Instalación Rápida](#instalación-rápida)
+   - [Herramientas de Observabilidad](#herramientas-de-observabilidad)
+   - [Métricas Automáticas](#métricas-automáticas)
+6. [Funcionamiento de la Aplicación](#funcionamiento-de-la-aplicación)
+7. [Estructura del Proyecto](#estructura-del-proyecto)
+8. [Flujos Desarrollados](#flujos-desarrollados-al-momento)
+9. [Flujos Pendientes (Entrega Final)](#flujos-pendientes-entrega-final)
+10. [Modelo de Datos](#modelo-de-datos)
+11. [Detalle Historias de Usuario](#detalle-historias-de-usuario)
 
 ---
 
-## **Descripción** del Objetivo
+## Descripción del Objetivo
 
 GeStock es un MVP de sistema web de gestión de inventario diseñado para empresas que necesitan controlar y administrar sus productos de manera eficiente mediante tecnología RFID. La aplicación permite a los usuarios gestionar el inventario en tiempo real, realizar carga masiva de productos, recibir alertas automáticas de stock bajo, y mantener un control detallado con trazabilidad completa de todos los movimientos, incluyendo cierres mensuales automáticos para auditoría histórica.
 
@@ -84,6 +76,23 @@ Desarrollar un MVP de aplicación web para gestión de inventario que permita:
 Listo! Ya está corriendo el proyecto y puedes probarlo sin ningún problema.
 
 Si deseas acceder a la documentación de la API del backend debes ingresar a http://localhost:3000/api/docs
+
+### 📸 Evidencia - Docker Compose Funcionando
+
+**Contenedores ejecutándose correctamente:**
+
+![Docker Compose Up - Contenedores corriendo](https://i.imgur.com/qaJfPWi.png)
+*Todos los servicios (backend, frontend, oracle-db) corriendo exitosamente*
+
+**Aplicación accesible en el navegador:**
+
+![Frontend GeStock Login](https://i.imgur.com/OduS3Vr.png)
+*Interfaz de login de GeStock accesible en http://localhost:8080*
+
+![Swagger API Documentation](https://i.imgur.com/4MeApXa.png)
+*Documentación Swagger de la API accesible en http://localhost:3000/api/docs*
+
+---
 
 ## Despliegue en Kubernetes (Minikube)
 
@@ -158,6 +167,30 @@ kubectl logs -l app=oracle-db
 ```bash
 kubectl delete -f ./kube/
 ```
+
+### 📸 Evidencia - Kubernetes Funcionando
+
+**Pods desplegados exitosamente:**
+
+![Kubernetes Pods Running](https://i.imgur.com/l8JKzOQ.png)
+*Todos los pods (backend, frontend, oracle-db) en estado Running con 2/2 containers (aplicación + Istio sidecar)*
+
+**Servicios expuestos:**
+
+![Kubernetes Services](https://i.imgur.com/Ky6Z35C.png)
+*Servicios configurados con ClusterIP y NodePort para acceso externo*
+
+**Deployments activos:**
+
+![Kubernetes Deployments](https://i.imgur.com/m6RXSe0.png)
+*Deployments de backend, frontend y oracle-db con réplicas listas*
+
+**Aplicación accesible desde Minikube:**
+
+![GeStock en Kubernetes](https://i.imgur.com/YOwEKSk.png)
+*Aplicación GeStock corriendo en Kubernetes y accesible desde el navegador*
+
+---
 
 ### Arquitectura de Kubernetes
 
@@ -295,8 +328,246 @@ chmod +x ./kube/init-oracle-db.sh
 
 - **Primera vez**: Oracle puede tardar 5-10 minutos en inicializar completamente
 - El backend espera automáticamente a que Oracle esté listo (estado `Init:0/1`)
-
 - El Job de inicialización se ejecuta automáticamente, pero `init-oracle-db.sh` debe ejecutarse manualmente
+
+---
+
+## 🕸️ Observabilidad con Istio Service Mesh
+
+GeStock incluye **Istio Service Mesh** para proporcionar observabilidad completa de la aplicación sin modificar código.
+
+### ¿Qué es Istio?
+
+Istio proporciona:
+- **Observabilidad automática**: Métricas, logs y traces de todos los endpoints
+- **Gestión de tráfico**: Enrutamiento avanzado, balanceo de carga, circuit breakers
+- **Seguridad**: mTLS automático entre servicios
+- **Resiliencia**: Reintentos automáticos, timeouts configurables
+
+### Instalación Rápida
+
+```bash
+cd kube
+chmod +x deploy-with-istio.sh install-istio.sh
+./deploy-with-istio.sh
+```
+
+Este script:
+1. Instala Istio v1.20.0 con perfil demo
+2. Habilita inyección automática de sidecars
+3. Reinicia los deployments con sidecars de Istio
+4. Despliega Prometheus, Grafana, Kiali y Jaeger
+5. Configura port-forwards para acceso local
+
+### Herramientas de Observabilidad
+
+#### 📊 Grafana - Dashboards de Métricas
+- **URL**: http://localhost:3000
+- **Credenciales**: admin / admin
+- **Dashboards disponibles**:
+  - Istio Mesh Dashboard (vista general)
+  - Istio Service Dashboard (métricas por servicio)
+  - Istio Workload Dashboard (métricas por pod)
+  - Istio Performance Dashboard (latencia detallada)
+
+#### 📈 Prometheus - Consultas de Métricas
+- **URL**: http://localhost:9090
+- Consulta métricas con PromQL
+- Almacena series temporales de métricas
+
+#### 🕸️ Kiali - Service Mesh Observability
+- **URL**: http://localhost:20001
+- **Credenciales**: admin / admin
+- Visualiza topología del sistema en tiempo real
+- Muestra flujo de tráfico entre servicios
+- Health checks y validación de configuración
+
+#### 🔍 Jaeger - Distributed Tracing
+- **URL**: http://localhost:16686
+- Rastrea requests completos (frontend → backend → database)
+- Identifica cuellos de botella de latencia
+- Debugging de requests fallidos
+
+### Métricas Automáticas
+
+Istio recolecta automáticamente para cada endpoint:
+
+**Métricas de Requests:**
+- Request rate (requests/segundo)
+- Success rate (% exitosos)
+- Error rate (errores/segundo)
+
+**Métricas de Latencia:**
+- P50 (mediana)
+- P90 (90% de requests)
+- P95 (95% de requests)
+- P99 (99% de requests)
+
+**Métricas de Tráfico:**
+- Bytes enviados/recibidos
+- Throughput (MB/s)
+- Tamaño promedio de requests/responses
+
+### Queries de Ejemplo en Prometheus
+
+```promql
+# Request rate por servicio
+sum(rate(istio_requests_total{destination_service="backend.default.svc.cluster.local"}[5m]))
+
+# Latencia P95 por endpoint
+histogram_quantile(0.95, sum(rate(istio_request_duration_milliseconds_bucket{destination_service="backend.default.svc.cluster.local"}[5m])) by (le))
+
+# Success rate (%)
+(sum(rate(istio_requests_total{destination_service="backend.default.svc.cluster.local",response_code!~"5.."}[5m])) / sum(rate(istio_requests_total{destination_service="backend.default.svc.cluster.local"}[5m]))) * 100
+```
+
+### Script de Acceso Rápido
+
+Para acceder a todas las herramientas fácilmente:
+
+```bash
+cd kube
+./access-observability.sh
+```
+
+Este script:
+- Verifica que los servicios estén corriendo
+- Crea port-forwards automáticamente
+- Muestra URLs de acceso
+
+### Beneficios de Istio
+
+✅ **Sin modificar código** - Observabilidad automática  
+✅ **Cobertura completa** - Todos los endpoints monitoreados  
+✅ **Producción ready** - Usado por Uber, Spotify, Netflix  
+✅ **Métricas avanzadas** - Latencia, throughput, error rate  
+✅ **Distributed tracing** - Path completo de cada request  
+✅ **Seguridad integrada** - mTLS entre servicios
+
+### 📸 Evidencia - Observabilidad con Istio
+
+**Grafana - Dashboard de Métricas:**
+
+![Grafana Istio Service Dashboard](https://i.imgur.com/6eYMqfA.png)
+*Dashboard de Grafana mostrando métricas del servicio backend: request rate, success rate, latencia (P50, P90, P95, P99), throughput*
+
+**Kiali - Topología del Service Mesh:**
+
+![Kiali Service Graph](https://i.imgur.com/LOTcdbj.png)
+*Visualización en tiempo real de la topología del sistema: frontend → backend → oracle-db con métricas de tráfico*
+
+---
+
+## CI/CD con GitHub Actions
+
+GeStock implementa un pipeline de CI/CD completo usando GitHub Actions para automatizar el proceso de construcción, pruebas y despliegue.
+
+### Workflow Principal
+
+El pipeline se ejecuta automáticamente en cada push a las ramas principales (`main`, `develop`) y en pull requests.
+
+**Archivo:** `.github/workflows/ci-cd.yml`
+
+### Stages del Pipeline
+
+#### 1. 🧪 Build & Test (Backend)
+- **Tecnología:** NestJS
+- **Pasos:**
+  - Checkout del código
+  - Setup de Node.js v20
+  - Instalación de dependencias con pnpm
+  - Compilación del proyecto
+  - Ejecución de tests unitarios
+  - Generación de coverage report
+
+#### 2. 🧪 Build & Test (Frontend)
+- **Tecnología:** Angular
+- **Pasos:**
+  - Checkout del código
+  - Setup de Node.js v20
+  - Instalación de dependencias con pnpm
+  - Compilación del proyecto con optimizaciones de producción
+  - Ejecución de tests unitarios
+  - Linting del código
+
+#### 3. 🐳 Docker Build & Push
+- **Registry:** Docker Hub
+- **Pasos:**
+  - Login a Docker Hub
+  - Build de imagen del backend
+  - Build de imagen del frontend
+  - Tag de imágenes con versión y `latest`
+  - Push a Docker Hub
+  - Escaneo de vulnerabilidades con Trivy
+
+#### 4. 🚀 Deploy to Kubernetes (Staging)
+- **Entorno:** Minikube/Kubernetes
+- **Pasos:**
+  - Setup de kubectl
+  - Aplicación de manifiestos de Kubernetes
+  - Actualización de imágenes en deployments
+  - Verificación de health checks
+  - Rollback automático en caso de fallo
+
+#### 5. 📊 Deploy Observability Stack
+- **Herramientas:** Istio, Prometheus, Grafana, Kiali, Jaeger
+- **Pasos:**
+  - Instalación de Istio service mesh
+  - Deploy de addons de observabilidad
+  - Configuración de telemetría
+  - Verificación de métricas
+
+### Variables de Entorno
+
+El pipeline utiliza GitHub Secrets para manejar información sensible:
+
+```yaml
+secrets:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  KUBECONFIG: ${{ secrets.KUBECONFIG }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+```
+
+### Badges de Estado
+
+[![CI/CD Pipeline](https://github.com/justjaaara/GeStock_FullStack/workflows/CI-CD/badge.svg)](https://github.com/justjaaara/GeStock_FullStack/actions)
+[![Docker Hub](https://img.shields.io/docker/pulls/justjaaara/gestock-backend.svg)](https://hub.docker.com/r/justjaaara/gestock-backend)
+
+### Estrategia de Deployment
+
+- **Desarrollo:** Deploy automático en cada commit a `develop`
+- **Staging:** Deploy automático en cada commit a `main`
+- **Producción:** Deploy manual con aprobación requerida
+- **Rollback:** Automático si los health checks fallan
+
+### Monitoreo del Pipeline
+
+Cada ejecución del pipeline incluye:
+- ✅ Notificaciones de estado (éxito/fallo)
+- 📊 Reportes de coverage de tests
+- 🔒 Escaneo de seguridad de imágenes Docker
+- 📝 Logs detallados de cada stage
+- ⏱️ Métricas de tiempo de ejecución
+
+### Comandos Útiles
+
+```bash
+# Ver estado de workflows
+gh workflow list
+
+# Ver ejecuciones recientes
+gh run list
+
+# Ver logs de una ejecución
+gh run view <run-id> --log
+
+# Re-ejecutar un workflow fallido
+gh run rerun <run-id>
+```
+
+---
 
 ## Funcionamiento de la Aplicación
 

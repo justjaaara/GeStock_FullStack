@@ -1,0 +1,34 @@
+---
+# Telemetry - Configuración de métricas personalizadas
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: gestock-telemetry
+  namespace: default
+spec:
+  metrics:
+    - providers:
+        - name: prometheus
+      overrides:
+        - match:
+            metric: ALL_METRICS
+          tagOverrides:
+            source_app:
+              value: "source.workload.name"
+            destination_app:
+              value: "destination.workload.name"
+            response_code:
+              value: "response.code"
+            request_protocol:
+              value: "request.protocol"
+  tracing:
+    - providers:
+        - name: "jaeger"
+      randomSamplingPercentage: 100.0
+      customTags:
+        app_name:
+          literal:
+            value: "gestock"
+  accessLogging:
+    - providers:
+        - name: envoy

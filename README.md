@@ -567,6 +567,21 @@ Cada ejecución del pipeline incluye:
 - 📝 Logs detallados de cada stage
 - ⏱️ Métricas de tiempo de ejecución
 
+🧪 Pruebas Implementadas
+
+A continuación se listan las pruebas desarrolladas para los diferentes módulos del backend:
+| **Módulo**               | **Tipo de prueba**      | **Descripción**                                                                |
+| ------------------------ | ----------------------- | ------------------------------------------------------------------------------ |
+| **Alerts**               | `service`, `controller` | Verifica la creación, actualización y envío de alertas en el sistema.          |
+| **Auth**                 | `service`, `controller` | Comprueba el flujo de autenticación, validación de tokens y permisos.          |
+| **Historical Movements** | `service`, `controller` | Evalúa el registro y consulta de movimientos históricos de inventario.         |
+| **Inventory**            | `service`, `controller` | Valida operaciones CRUD de inventario y sincronización de stock.               |
+| **Products**             | `service`, `controller` | Prueba la gestión de productos, incluyendo creación, búsqueda y actualización. |
+| **RFID**                 | `service`, `controller` | Testea la lectura, vinculación y gestión de etiquetas RFID.                    |
+| **Sales**                | `service`, `controller` | Asegura el correcto manejo de ventas, cálculos y generación de reportes.       |
+| **Users**                | `service`, `controller` | Verifica la creación, autenticación y gestión de usuarios del sistema.         |
+
+
 ### Comandos Útiles
 
 ```bash

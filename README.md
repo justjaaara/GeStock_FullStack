@@ -666,9 +666,7 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
   - Dashboard principal
   - Acceso rápido a todas las secciones
 
-## Flujos Pendientes (Entrega Final)
-
-### 🚧 1. Administración de Usuarios y Roles (GES-112, GES-117, GES-152, GES-201)
+### 🚧 3. Administración de Usuarios y Roles (GES-112, GES-117, GES-152, GES-201)
 
 - **Gestión de Usuarios por Administrador**
 
@@ -682,7 +680,7 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
   - Generación de tokens temporales
   - Validación de identidad
 
-### 🚧 2. Gestión Completa de Productos (GES-47, GES-58, GES-69, GES-77, GES-85, GES-94, GES-103, GES-131)
+### 🚧 4. Gestión Completa de Productos (GES-47, GES-58, GES-69, GES-77, GES-85, GES-94, GES-103, GES-131)
 
 - **CRUD de Productos**
 
@@ -697,7 +695,7 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
   - Configuración de stock mínimo por producto (GES-131)
   - Filtrado por categoría, precio, existencias (GES-103)
 
-### 🚧 3. Sistema RFID y Control de Lotes (GES-159, GES-160)
+### 🚧 5. Sistema RFID y Control de Lotes (GES-159, GES-160)
 
 - **Carga Masiva con RFID**
   - Escaneo de etiquetas RFID para registro automático (GES-159)
@@ -705,14 +703,14 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
   - Registro de lotes con trazabilidad completa
   - Integración con hardware RFID
 
-### 🚧 4. Sistema de Alertas y Trazabilidad (GES-118, GES-119, GES-203)
+### 🚧 6. Sistema de Alertas y Trazabilidad (GES-118, GES-119, GES-203)
 
 - **Alertas de Stock**
   - Notificaciones automáticas por stock bajo (GES-118)
   - Alertas diarias hasta reposición (GES-203)
   - Dashboard de alertas activas
 
-### 🚧 5. Módulo de Ventas Básico (GES-162, GES-164, GES-204, GES-205)
+### 🚧 7. Módulo de Ventas Básico (GES-162, GES-164, GES-204, GES-205)
 
 - **Punto de Venta Simplificado**
 
@@ -726,7 +724,7 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
   - Registro de salidas para testing
   - Control de stock en tiempo real
 
-### 🚧 6. Sistema de Reportes y Consolidados (GES-166, GES-167, GES-168, GES-206, GES-211, GES-212)
+### 🚧 8. Sistema de Reportes y Consolidados (GES-166, GES-167, GES-168, GES-206, GES-211, GES-212)
 
 - **Reportes Operativos**
   - Reporte general de inventario por producto (GES-166)
@@ -734,7 +732,7 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
   - Reporte de ingresos por lote RFID (GES-168)
   - Consolidado de stock por producto (GES-211)
 
-### 🚧 7. Cierres Mensuales (GES-213, GES-214, GES-215)
+### 🚧 9. Cierres Mensuales (GES-213, GES-214, GES-215)
 
 - **Cierres Automáticos**
   - Snapshot automático mensual del inventario (GES-213)

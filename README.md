@@ -77,6 +77,11 @@ Listo! Ya está corriendo el proyecto y puedes probarlo sin ningún problema.
 
 Si deseas acceder a la documentación de la API del backend debes ingresar a http://localhost:3000/api/docs
 
+### Enlace imágenes en Docker Hub
+
+![justjaaara/gestock-backend](https://hub.docker.com/r/justjaaara/gestock-backend)
+![justjaaara/gestock-frontend](https://hub.docker.com/r/justjaaara/gestock-frontend)
+
 ### Evidencia - Docker Compose Funcionando
 
 **Contenedores ejecutándose correctamente:**

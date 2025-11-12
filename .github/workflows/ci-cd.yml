@@ -22,7 +22,7 @@ jobs:
       - name: Configurar Node.js para backend
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Instalar dependencias backend
         run: |
@@ -64,7 +64,7 @@ jobs:
       # Backend image
       - name: Construir imagen Docker backend
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestock-backend:latest ./backend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestock-backend:latest ./GeStock-Backend
 
       - name: Publicar imagen Docker backend
         run: |
@@ -73,7 +73,7 @@ jobs:
       # Frontend image
       - name: Construir imagen Docker frontend
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestock-frontend:latest ./frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestock-frontend:latest ./GeStock-Frontend
 
       - name: Publicar imagen Docker frontend
         run: |

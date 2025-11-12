@@ -85,6 +85,87 @@ Listo! Ya está corriendo el proyecto y puedes probarlo sin ningún problema.
 
 Si deseas acceder a la documentación de la API del backend debes ingresar a http://localhost:3000/api/docs
 
+## Despliegue en Kubernetes (Minikube)
+
+### Requisitos previos
+
+1. **Minikube instalado**: https://minikube.sigs.k8s.io/docs/start/
+2. **kubectl instalado**: https://kubernetes.io/docs/tasks/tools/
+3. **Docker Desktop** corriendo
+
+### Despliegue
+
+1. **Iniciar Minikube**:
+
+   ```bash
+   minikube start --driver=docker
+   ```
+
+2. **Desplegar aplicaciones**:
+
+   ```bash
+   kubectl apply -f ./kube/
+   ```
+
+3. **Verificar estado**:
+   ```bash
+   kubectl get pods
+   kubectl get svc
+   ```
+
+### Acceder a la aplicación
+
+Una vez que todos los pods estén `Running`:
+
+```bash
+# Abrir frontend en el navegador
+minikube service frontend
+
+# Abrir backend/API en el navegador
+minikube service backend
+```
+
+O acceder manualmente:
+
+```bash
+# Ver la IP de Minikube
+minikube ip
+
+# Acceder:
+# Frontend: http://<minikube-ip>:30800
+# Backend:  http://<minikube-ip>:30300
+# Swagger:  http://<minikube-ip>:30300/api/docs
+```
+
+### Monitoreo
+
+```bash
+# Ver pods en tiempo real
+kubectl get pods -w
+
+# Ver logs
+kubectl logs <nombre-pod>
+
+# Ver logs del backend
+kubectl logs -l app=backend
+
+# Ver logs de Oracle
+kubectl logs -l app=oracle-db
+```
+
+### Limpiar
+
+```bash
+kubectl delete -f ./kube/
+```
+
+### Notas
+
+- **Primera vez**: Oracle puede tardar 5-10 minutos en inicializar completamente
+- El backend espera automáticamente a que Oracle esté listo (estado `Init:0/1`)
+- Usa el namespace `default` de Kubernetes (configuración simple)
+- Solo requiere 2 archivos YAML para todo el despliegue
+
 ## Funcionamiento de la Aplicación
 
 La aplicación está construida con una arquitectura moderna de frontend-backend separados:

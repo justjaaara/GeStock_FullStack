@@ -77,20 +77,20 @@ Listo! Ya está corriendo el proyecto y puedes probarlo sin ningún problema.
 
 Si deseas acceder a la documentación de la API del backend debes ingresar a http://localhost:3000/api/docs
 
-### 📸 Evidencia - Docker Compose Funcionando
+### Evidencia - Docker Compose Funcionando
 
 **Contenedores ejecutándose correctamente:**
 
 ![Docker Compose Up - Contenedores corriendo](https://i.imgur.com/qaJfPWi.png)
-*Todos los servicios (backend, frontend, oracle-db) corriendo exitosamente*
+_Todos los servicios (backend, frontend, oracle-db) corriendo exitosamente_
 
 **Aplicación accesible en el navegador:**
 
 ![Frontend GeStock Login](https://i.imgur.com/OduS3Vr.png)
-*Interfaz de login de GeStock accesible en http://localhost:8080*
+_Interfaz de login de GeStock accesible en http://localhost:8080_
 
 ![Swagger API Documentation](https://i.imgur.com/4MeApXa.png)
-*Documentación Swagger de la API accesible en http://localhost:3000/api/docs*
+_Documentación Swagger de la API accesible en http://localhost:3000/api/docs_
 
 ---
 
@@ -168,27 +168,27 @@ kubectl logs -l app=oracle-db
 kubectl delete -f ./kube/
 ```
 
-### 📸 Evidencia - Kubernetes Funcionando
+### Evidencia - Kubernetes Funcionando
 
 **Pods desplegados exitosamente:**
 
 ![Kubernetes Pods Running](https://i.imgur.com/l8JKzOQ.png)
-*Todos los pods (backend, frontend, oracle-db) en estado Running con 2/2 containers (aplicación + Istio sidecar)*
+_Todos los pods (backend, frontend, oracle-db) en estado Running con 2/2 containers (aplicación + Istio sidecar)_
 
 **Servicios expuestos:**
 
 ![Kubernetes Services](https://i.imgur.com/Ky6Z35C.png)
-*Servicios configurados con ClusterIP y NodePort para acceso externo*
+_Servicios configurados con ClusterIP y NodePort para acceso externo_
 
 **Deployments activos:**
 
 ![Kubernetes Deployments](https://i.imgur.com/m6RXSe0.png)
-*Deployments de backend, frontend y oracle-db con réplicas listas*
+_Deployments de backend, frontend y oracle-db con réplicas listas_
 
 **Aplicación accesible desde Minikube:**
 
 ![GeStock en Kubernetes](https://i.imgur.com/YOwEKSk.png)
-*Aplicación GeStock corriendo en Kubernetes y accesible desde el navegador*
+_Aplicación GeStock corriendo en Kubernetes y accesible desde el navegador_
 
 ---
 
@@ -332,13 +332,14 @@ chmod +x ./kube/init-oracle-db.sh
 
 ---
 
-## 🕸️ Observabilidad con Istio Service Mesh
+## Observabilidad con Istio Service Mesh
 
 GeStock incluye **Istio Service Mesh** para proporcionar observabilidad completa de la aplicación sin modificar código.
 
 ### ¿Qué es Istio?
 
 Istio proporciona:
+
 - **Observabilidad automática**: Métricas, logs y traces de todos los endpoints
 - **Gestión de tráfico**: Enrutamiento avanzado, balanceo de carga, circuit breakers
 - **Seguridad**: mTLS automático entre servicios
@@ -353,6 +354,7 @@ chmod +x deploy-with-istio.sh install-istio.sh
 ```
 
 Este script:
+
 1. Instala Istio v1.20.0 con perfil demo
 2. Habilita inyección automática de sidecars
 3. Reinicia los deployments con sidecars de Istio
@@ -362,6 +364,7 @@ Este script:
 ### Herramientas de Observabilidad
 
 #### 📊 Grafana - Dashboards de Métricas
+
 - **URL**: http://localhost:3000
 - **Credenciales**: admin / admin
 - **Dashboards disponibles**:
@@ -371,11 +374,13 @@ Este script:
   - Istio Performance Dashboard (latencia detallada)
 
 #### 📈 Prometheus - Consultas de Métricas
+
 - **URL**: http://localhost:9090
 - Consulta métricas con PromQL
 - Almacena series temporales de métricas
 
 #### 🕸️ Kiali - Service Mesh Observability
+
 - **URL**: http://localhost:20001
 - **Credenciales**: admin / admin
 - Visualiza topología del sistema en tiempo real
@@ -383,6 +388,7 @@ Este script:
 - Health checks y validación de configuración
 
 #### 🔍 Jaeger - Distributed Tracing
+
 - **URL**: http://localhost:16686
 - Rastrea requests completos (frontend → backend → database)
 - Identifica cuellos de botella de latencia
@@ -393,17 +399,20 @@ Este script:
 Istio recolecta automáticamente para cada endpoint:
 
 **Métricas de Requests:**
+
 - Request rate (requests/segundo)
 - Success rate (% exitosos)
 - Error rate (errores/segundo)
 
 **Métricas de Latencia:**
+
 - P50 (mediana)
 - P90 (90% de requests)
 - P95 (95% de requests)
 - P99 (99% de requests)
 
 **Métricas de Tráfico:**
+
 - Bytes enviados/recibidos
 - Throughput (MB/s)
 - Tamaño promedio de requests/responses
@@ -431,6 +440,7 @@ cd kube
 ```
 
 Este script:
+
 - Verifica que los servicios estén corriendo
 - Crea port-forwards automáticamente
 - Muestra URLs de acceso
@@ -444,17 +454,17 @@ Este script:
 ✅ **Distributed tracing** - Path completo de cada request  
 ✅ **Seguridad integrada** - mTLS entre servicios
 
-### 📸 Evidencia - Observabilidad con Istio
+### Evidencia - Observabilidad con Istio
 
 **Grafana - Dashboard de Métricas:**
 
 ![Grafana Istio Service Dashboard](https://i.imgur.com/6eYMqfA.png)
-*Dashboard de Grafana mostrando métricas del servicio backend: request rate, success rate, latencia (P50, P90, P95, P99), throughput*
+_Dashboard de Grafana mostrando métricas del servicio backend: request rate, success rate, latencia (P50, P90, P95, P99), throughput_
 
 **Kiali - Topología del Service Mesh:**
 
 ![Kiali Service Graph](https://i.imgur.com/LOTcdbj.png)
-*Visualización en tiempo real de la topología del sistema: frontend → backend → oracle-db con métricas de tráfico*
+_Visualización en tiempo real de la topología del sistema: frontend → backend → oracle-db con métricas de tráfico_
 
 ---
 
@@ -471,6 +481,7 @@ El pipeline se ejecuta automáticamente en cada push a las ramas principales (`m
 ### Stages del Pipeline
 
 #### 1. 🧪 Build & Test (Backend)
+
 - **Tecnología:** NestJS
 - **Pasos:**
   - Checkout del código
@@ -481,6 +492,7 @@ El pipeline se ejecuta automáticamente en cada push a las ramas principales (`m
   - Generación de coverage report
 
 #### 2. 🧪 Build & Test (Frontend)
+
 - **Tecnología:** Angular
 - **Pasos:**
   - Checkout del código
@@ -491,6 +503,7 @@ El pipeline se ejecuta automáticamente en cada push a las ramas principales (`m
   - Linting del código
 
 #### 3. 🐳 Docker Build & Push
+
 - **Registry:** Docker Hub
 - **Pasos:**
   - Login a Docker Hub
@@ -501,6 +514,7 @@ El pipeline se ejecuta automáticamente en cada push a las ramas principales (`m
   - Escaneo de vulnerabilidades con Trivy
 
 #### 4. 🚀 Deploy to Kubernetes (Staging)
+
 - **Entorno:** Minikube/Kubernetes
 - **Pasos:**
   - Setup de kubectl
@@ -510,6 +524,7 @@ El pipeline se ejecuta automáticamente en cada push a las ramas principales (`m
   - Rollback automático en caso de fallo
 
 #### 5. 📊 Deploy Observability Stack
+
 - **Herramientas:** Istio, Prometheus, Grafana, Kiali, Jaeger
 - **Pasos:**
   - Instalación de Istio service mesh
@@ -530,11 +545,6 @@ secrets:
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
 ```
 
-### Badges de Estado
-
-[![CI/CD Pipeline](https://github.com/justjaaara/GeStock_FullStack/workflows/CI-CD/badge.svg)](https://github.com/justjaaara/GeStock_FullStack/actions)
-[![Docker Hub](https://img.shields.io/docker/pulls/justjaaara/gestock-backend.svg)](https://hub.docker.com/r/justjaaara/gestock-backend)
-
 ### Estrategia de Deployment
 
 - **Desarrollo:** Deploy automático en cada commit a `develop`
@@ -545,6 +555,7 @@ secrets:
 ### Monitoreo del Pipeline
 
 Cada ejecución del pipeline incluye:
+
 - ✅ Notificaciones de estado (éxito/fallo)
 - 📊 Reportes de coverage de tests
 - 🔒 Escaneo de seguridad de imágenes Docker

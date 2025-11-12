@@ -159,12 +159,144 @@ kubectl logs -l app=oracle-db
 kubectl delete -f ./kube/
 ```
 
-### Notas
+### Arquitectura de Kubernetes
+
+La carpeta `kube/` contiene todos los manifiestos necesarios para desplegar GeStock en Kubernetes:
+
+#### **Archivos de Configuración**
+
+##### **`secret.yaml`**
+
+Contiene las credenciales sensibles encriptadas en base64:
+
+- `DB_PASSWORD`: Contraseña de Oracle (usuario GESTOCK y SYSTEM)
+- `JWT_SECRET`: Clave secreta para firmar tokens JWT
+
+**Uso**: Las variables se inyectan en los pods mediante `secretKeyRef`.
+
+##### **`configmap.yaml`**
+
+Almacena configuraciones no sensibles de la aplicación:
+
+- `DB_HOST`: Nombre del servicio de Oracle (`oracle-db`)
+- `DB_PORT`: Puerto de Oracle (`1521`)
+- `DB_USERNAME`: Usuario de base de datos (`GESTOCK`)
+- `DB_NAME`: Nombre de la base de datos (`FREEPDB1`)
+- `PORT`: Puerto del backend (`3000`)
+- `BACKENDBASEURL`: URL base para el frontend
+
+**Uso**: Se carga completo en los pods mediante `envFrom.configMapRef`.
+
+##### **`namespace.yaml`**
+
+Define el namespace `gestock` para aislar recursos (opcional, actualmente se usa `default`).
+
+#### **Archivos de Despliegue**
+
+##### **`deployment.yaml`**
+
+Contiene **tres deployments** que orquestan los pods:
+
+1. **Oracle Database**:
+
+   - Imagen: `container-registry.oracle.com/database/free:latest`
+   - Puerto: 1521
+   - Variables: `ORACLE_PWD`, `ORACLE_CHARACTERSET`
+   - Uso: Base de datos principal del sistema
+
+2. **Backend (NestJS)**:
+
+   - Imagen: `justjaaara/gestock-backend:latest`
+   - Puerto: 3000
+   - Init Container: Espera a que Oracle esté disponible antes de iniciar
+   - Variables: Carga desde ConfigMap + Secrets
+   - Uso: API REST del sistema
+
+3. **Frontend (Angular)**:
+   - Imagen: `justjaaara/gestock-frontend:latest`
+   - Puerto: 8080
+   - Uso: Interfaz web de usuario
+
+**Características**:
+
+- 1 réplica por servicio (configuración simple)
+- Init container en backend para esperar a Oracle
+- Health checks deshabilitados para simplificar
+
+##### **`service.yaml`**
+
+Expone los pods mediante servicios de Kubernetes:
+
+1. **oracle-db** (ClusterIP):
+
+   - Puerto interno: 1521
+   - Accesible solo dentro del cluster
+
+2. **backend** (NodePort):
+
+   - Puerto interno: 3000
+   - Puerto externo: 30300
+   - Acceso: `http://<minikube-ip>:30300`
+
+3. **frontend** (NodePort):
+   - Puerto interno: 8080
+   - Puerto externo: 30800
+   - Acceso: `http://<minikube-ip>:30800`
+
+**Tipos de servicio**:
+
+- **ClusterIP**: Solo acceso interno (Oracle)
+- **NodePort**: Acceso externo mediante puerto del nodo (Backend, Frontend)
+
+#### **Scripts de Inicialización**
+
+##### **`oracle-init-job.yaml`**
+
+Job de Kubernetes que inicializa la base de datos:
+
+- Espera 60 segundos a que Oracle termine de iniciar
+- Crea el usuario `GESTOCK` con todos los privilegios
+- Se ejecuta una sola vez tras el despliegue
+- Se auto-elimina después de 100 segundos
+
+**Ejecución**:
+
+```bash
+kubectl apply -f ./kube/oracle-init-job.yaml
+```
+
+##### **`init-oracle-db.sh`**
+
+Script Bash para inicialización completa de la base de datos:
+
+- Copia todos los scripts SQL al pod de Oracle
+- Ejecuta en orden:
+  - Secuencias (02)
+  - Tablas (03)
+  - Vistas (04)
+  - Datos iniciales (05)
+  - Índices (06)
+  - Procedimientos almacenados (07)
+  - Constraints (08)
+  - Triggers (09)
+  - Validación final (999)
+- Maneja errores de tablespaces faltantes automáticamente
+
+**Ejecución**:
+
+```bash
+chmod +x ./kube/init-oracle-db.sh
+./kube/init-oracle-db.sh
+```
+
+** Importante**: Este script debe ejecutarse **después** de que el `oracle-init-job` haya completado la creación del usuario GESTOCK.
+
+### Notas Importantes
 
 - **Primera vez**: Oracle puede tardar 5-10 minutos en inicializar completamente
 - El backend espera automáticamente a que Oracle esté listo (estado `Init:0/1`)
-- Usa el namespace `default` de Kubernetes (configuración simple)
-- Solo requiere 2 archivos YAML para todo el despliegue
+
+- El Job de inicialización se ejecuta automáticamente, pero `init-oracle-db.sh` debe ejecutarse manualmente
 
 ## Funcionamiento de la Aplicación
 
@@ -480,252 +612,182 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
    - **Descripción**:: Yo como administrador/usuario necesito poder registrar usuarios en el sistema de inventarios para que el personal tenga acceso al sistema de inventarios
    - **Estado**:: Completo
 
-2. - **Historia de usuario**:: GES-216
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como usuario necesito acceder a la vista de inventario para consultar los productos disponibles y sus atributos.
+2. - **Historia de usuario**:: GES-3
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como usuario necesito poder iniciar sesión en el sistema de inventarios para poder gestionar el inventario.
    - **Estado**:: Completo
 
-3. - **Historia de usuario**:: GES-217
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como administrador necesito acceder a la vista de reportes para generar, filtrar y visualizar la información consolidada.
+3. - **Historia de usuario**:: GES-4
+   - **Autor**:: Juan Pablo Cardona Bedoya
+   - **Descripción**:: Yo como usuario necesito poder recuperar mi contraseña en caso de olvidarla para recuperar el acceso a mi cuenta.
    - **Estado**:: Completo
 
-4. - **Historia de usuario**:: GES-218
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como administrador necesito acceder a la vista de clientes para gestionar y consultar la información de los clientes registrados.
+4. - **Historia de usuario**:: GES-47
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como usuario necesito registrar un producto en el gestor de inventarios para gestionarlo después
    - **Estado**:: Completo
 
-5. - **Historia de usuario**:: GES-219
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como administrador necesito acceder a la vista de proveedores para gestionar la información de los proveedores y validar sus - **Estado**:s.
+5. - **Historia de usuario**:: GES-58
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como usuario necesito actualizar categoría, nombre, precio de un producto en el sistema de inventario en caso de que requiera cambiar información ya registrada
    - **Estado**:: Completo
 
-6. - **Historia de usuario**:: GES-220
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como usuario necesito acceder a la vista de historial de movimientos para consultar entradas y salidas de productos.
+6. - **Historia de usuario**:: GES-69
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como usuario necesito poder visualizar el producto ya creado en el sistema de inventario
    - **Estado**:: Completo
 
-7. - **Historia de usuario**:: GES-221
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como usuario/administrador necesito acceder a la vista de compras para registrar y consultar las compras realizadas.
+7. - **Historia de usuario**:: GES-77
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como usuario necesito poder tener una vista general de todo el sistema de inventario donde visualice todos los atributos de cada producto.
    - **Estado**:: Completo
 
-8. - **Historia de usuario**:: GES-222
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como usuario/administrador necesito acceder a la vista de alertas para monitorear el - **Estado**: crítico de productos y actuar a tiempo.
+8. - **Historia de usuario**:: GES-85
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como usuario necesito poder actualizar las existencias de un producto ya creado en el sistema de inventario
    - **Estado**:: Completo
 
-9. - **Historia de usuario**:: GES-223
-   - **Autor**:: Luis Pablo Goez Sepulveda
-   - **Descripción**:: Yo como administrador necesito acceder a la vista de proyecciones para consultar predicciones de inventario y tomar decisiones estratégicas.
+9. - **Historia de usuario**:: GES-94
+   - **Autor**:: Felipe Villa Jaramillo
+   - **Descripción**:: Yo como un usuario necesito poder eliminar un producto del sistema de inventario
    - **Estado**:: Completo
 
-10. - **Historia de usuario**:: GES-224
-    - **Autor**:: Luis Pablo Goez Sepulveda
-    - **Descripción**:: Yo como usuario/administrador necesito acceder al dashboard para visualizar métricas clave y tener una visión general del sistema.
-    - **Estado**:: Completo
-
-11. - **Historia de usuario**:: GES-225
-    - **Autor**:: Juan Pablo Cardona Bedoya
-    - **Descripción**:: Yo como usuario necesito acceder a la vista de inicio de sesión para ingresar al sistema con mis credenciales y gestionar el inventario.
-    - **Estado**:: Completo
-
-12. - **Historia de usuario**:: GES-226
-    - **Autor**:: Juan Pablo Cardona Bedoya
-    - **Descripción**:: Yo como usuario necesito acceder a la vista de registro de usuarios para crear mi nueva cuenta.
-    - **Estado**:: Completo
-
-13. - **Historia de usuario**:: GES-227
-    - **Autor**:: Juan Pablo Cardona Bedoya
-    - **Descripción**:: Yo como usuario necesito acceder a la vista de recuperación de contraseña para restablecer mi clave en caso de olvido y recuperar el acceso al sistema.
-    - **Estado**:: Completo
-
-14. - **Historia de usuario**:: GES-3
+10. - **Historia de usuario**:: GES-103
     - **Autor**:: Felipe Villa Jaramillo
-    - **Descripción**:: Yo como usuario necesito poder iniciar sesión en el sistema de inventarios para poder gestionar el inventario.
-    - **Estado**:: Completo
-
-15. - **Historia de usuario**:: GES-228
-    - **Autor**:: Juan Pablo Cardona Bedoya
-    - **Descripción**:: Yo como usuario necesito poder cambiar la contraseña de mi cuenta para tener control de la misma.
-    - **Estado**:: Completo
-
-16. - **Historia de usuario**:: GES-4
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito poder recordar mi contraseña en caso de olvidarla para recuperar el acceso a mi cuenta.
-    - **Estado**:: Incompleto
-
-17. - **Historia de usuario**:: GES-112
-    - **Autor**::
-    - **Descripción**:: Yo como administrador necesito poder eliminar usuarios para revocar su acceso cuando ya no hacen parte del equipo.
-    - **Estado**:: Incompleto
-
-18. - **Historia de usuario**:: GES-117
-    - **Autor**::
-    - **Descripción**:: Yo como administrador necesito poder ver un listado de todos los usuarios registrados en el sistema para llevar control del personal con acceso.
-    - **Estado**:: Incompleto
-
-19. - **Historia de usuario**:: GES-47
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito registrar un producto en el gestor de inventarios para gestionarlo después
-    - **Estado**:: Incompleto
-
-20. - **Historia de usuario**:: GES-58
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito actualizar categoría, nombre, precio de un producto en el sistema de inventario en caso de que requiera cambiar información ya registrada
-    - **Estado**:: Incompleto
-
-21. - **Historia de usuario**:: GES-69
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito poder visualizar el producto ya creado en el sistema de inventario
-    - **Estado**:: Incompleto
-
-22. - **Historia de usuario**:: GES-77
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito poder tener una vista general de todo el sistema de inventario donde visualice todos los atributos de cada producto.
-    - **Estado**:: Incompleto
-
-23. - **Historia de usuario**:: GES-85
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito poder actualizar las existencias de un producto ya creado en el sistema de inventario
-    - **Estado**:: Incompleto
-
-24. - **Historia de usuario**:: GES-94
-    - **Autor**::
-    - **Descripción**:: Yo como un usuario necesito poder eliminar un producto del sistema de inventario
-    - **Estado**:: Incompleto
-
-25. - **Historia de usuario**:: GES-103
-    - **Autor**::
     - **Descripción**:: Yo como usuario necesito poder filtrar la visualización del inventario por atributos del producto como: categoría, precio, existencias
-    - **Estado**:: Incompleto
+    - **Estado**:: Completo
 
-26. - **Historia de usuario**:: GES-131
-    - **Autor**::
-    - **Descripción**:: Yo como usuario necesito poder determinar cual es el stock mínimo de un producto para que se dispare la alerta de bajas existencias de producto
-    - **Estado**:: Incompleto
+11. - **Historia de usuario**:: GES-112
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador necesito poder eliminar usuarios para revocar su acceso cuando ya no hacen parte del equipo.
+    - **Estado**:: Completo
 
-27. - **Historia de usuario**:: GES-118
-    - **Autor**::
+12. - **Historia de usuario**:: GES-117
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador necesito poder ver un listado de todos los usuarios registrados en el sistema para llevar control del personal con acceso.
+    - **Estado**:: Completo
+
+13. - **Historia de usuario**:: GES-118
+    - **Autor**:: Juan Pablo Cardona Bedoya
     - **Descripción**:: Yo como usuario necesito recibir una alerta cuando las existencias de un producto estén por debajo de un umbral mínimo para tomar decisiones de reposición.
-    - **Estado**:: Incompleto
+    - **Estado**:: Completo
 
-28. - **Historia de usuario**:: GES-119
+14. - **Historia de usuario**:: GES-119
     - **Autor**::
     - **Descripción**:: Yo como usuario necesito poder consultar un historial de modificaciones realizadas a los productos para rastrear cambios importantes.
     - **Estado**:: Incompleto
 
-29. - **Historia de usuario**:: GES-152
+15. - **Historia de usuario**:: GES-152
     - **Autor**::
     - **Descripción**:: Yo como administrador necesito asignar diferentes roles a los usuarios para delimitar sus funciones dentro del sistema.
     - **Estado**:: Incompleto
 
-30. - **Historia de usuario**:: GES-159
+16. - **Historia de usuario**:: GES-159
     - **Autor**::
     - **Descripción**:: Yo como administrador necesito escanear una etiqueta RFID de un lote para que el sistema registre automáticamente los productos que contiene.
     - **Estado**:: Incompleto
 
-31. - **Historia de usuario**:: GES-160
+17. - **Historia de usuario**:: GES-160
     - **Autor**::
     - **Descripción**:: Yo como usuario necesito que el sistema valide si el lote ya fue ingresado anteriormente para evitar duplicados en el inventario.
     - **Estado**:: Incompleto
 
-32. - **Historia de usuario**:: GES-162
+18. - **Historia de usuario**:: GES-162
     - **Autor**::
     - **Descripción**:: Yo como cajero necesito buscar un producto desde el sistema para añadirlo a la venta.
     - **Estado**:: Incompleto
 
-33. - **Historia de usuario**:: GES-164
+19. - **Historia de usuario**:: GES-164
     - **Autor**::
     - **Descripción**:: Yo como cajero necesito emitir un comprobante de venta que muestre productos, cantidades, precios y totales.
     - **Estado**:: Incompleto
 
-34. - **Historia de usuario**:: GES-166
+20. - **Historia de usuario**:: GES-166
     - **Autor**::
     - **Descripción**:: Yo como administrador necesito generar un reporte general del inventario con las unidades disponibles por producto.
     - **Estado**:: Incompleto
 
-35. - **Historia de usuario**:: GES-167
+21. - **Historia de usuario**:: GES-167
     - **Autor**::
     - **Descripción**:: Yo como administrador necesito generar un reporte de productos vendidos por categoría para entender la demanda.
     - **Estado**:: Incompleto
 
-36. - **Historia de usuario**:: GES-168
+22. - **Historia de usuario**:: GES-168
     - **Autor**::
     - **Descripción**:: Yo como administrador necesito generar un reporte de ingresos por lote para conocer cuándo y qué productos entraron.
     - **Estado**:: Incompleto
 
-37. - **Historia de usuario**:: GES-200
+23. - **Historia de usuario**:: GES-200
     - **Autor**::
     - **Descripción**:: La aplicación debe validar en menos de 2 segundos si las credenciales son correctas al iniciar sesión.
     - **Estado**:: Incompleto
 
-38. - **Historia de usuario**:: GES-201
+24. - **Historia de usuario**:: GES-201
     - **Autor**::
     - **Descripción**:: Solo los usuarios con el rol de administrador deben tener acceso a las funciones de registro, eliminación y asignación de roles.
     - **Estado**:: Incompleto
 
-39. - **Historia de usuario**:: GES-202
+25. - **Historia de usuario**:: GES-202
     - **Autor**::
     - **Descripción**:: La búsqueda de productos en el inventario debe completarse en menos de 2 segundos.
     - **Estado**:: Incompleto
 
-40. - **Historia de usuario**:: GES-203
+26. - **Historia de usuario**:: GES-203
     - **Autor**::
     - **Descripción**:: Las alertas de stock mínimo deben mostrarse al menos una vez por día hasta que se reponga el inventario.
     - **Estado**:: Incompleto
 
-41. - **Historia de usuario**:: GES-204
+27. - **Historia de usuario**:: GES-204
     - **Autor**::
     - **Descripción**:: El sistema debe evitar la sobreventa mediante validación en tiempo real del inventario actualizado.
     - **Estado**:: Incompleto
 
-42. - **Historia de usuario**:: GES-205
+28. - **Historia de usuario**:: GES-205
     - **Autor**::
     - **Descripción**:: Las operaciones de venta deben estar disponibles únicamente para usuarios con el rol de cajero o administrador.
     - **Estado**:: Incompleto
 
-43. - **Historia de usuario**:: GES-206
+29. - **Historia de usuario**:: GES-206
     - **Autor**::
     - **Descripción**:: Todos los reportes deben poder exportarse a formatos PDF y Excel.
     - **Estado**:: Incompleto
 
-44. - **Historia de usuario**:: GES-208
+30. - **Historia de usuario**:: GES-208
     - **Autor**::
     - **Descripción**:: La aplicación debe ser accesible desde cualquier navegador moderno.
     - **Estado**:: Incompleto
 
-45. - **Historia de usuario**:: GES-209
+31. - **Historia de usuario**:: GES-209
     - **Autor**::
     - **Descripción**:: La aplicación debe contar con respaldo automático de la base de datos al menos una vez a la semana.
     - **Estado**:: Incompleto
 
-46. - **Historia de usuario**:: GES-210
+32. - **Historia de usuario**:: GES-210
     - **Autor**::
     - **Descripción**:: La interfaz debe estar diseñada para ser intuitiva y usable por personal sin conocimientos técnicos avanzados.
     - **Estado**:: Incompleto
 
-47. - **Historia de usuario**:: GES-211
+33. - **Historia de usuario**:: GES-211
     - **Autor**::
     - **Descripción**:: Yo como administrador, quiero calcular y visualizar el stock consolidado por producto, para tener claridad del inventario real disponible.
     - **Estado**:: Incompleto
 
-48. - **Historia de usuario**:: GES-212
+34. - **Historia de usuario**:: GES-212
     - **Autor**::
     - **Descripción**:: Yo como administrador, quiero exportar el consolidado a PDF o Excel, para compartir y analizar la información fácilmente.
     - **Estado**:: Incompleto
 
-49. - **Historia de usuario**:: GES-213
+35. - **Historia de usuario**:: GES-213
     - **Autor**::
     - **Descripción**:: Yo como administrador, quiero que se registre automáticamente un snapshot del inventario al final de cada mes, para contar con un historial confiable de cierres mensuales.
     - **Estado**:: Incompleto
 
-50. - **Historia de usuario**:: GES-214
+36. - **Historia de usuario**:: GES-214
     - **Autor**::
     - **Descripción**:: Yo como administrador, quiero que los movimientos anteriores al cierre mensual queden bloqueados y no puedan ser modificados, para preservar la integridad del inventario histórico.
     - **Estado**:: Incompleto
 
-51. - **Historia de usuario**:: GES-215
+37. - **Historia de usuario**:: GES-215
     - **Autor**::
     - **Descripción**:: Yo como administrador, quiero consultar y exportar los cierres mensuales históricos, para realizar análisis y auditorías de inventario.
     - **Estado**:: Incompleto

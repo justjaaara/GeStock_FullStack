@@ -677,20 +677,191 @@ La aplicación está construida con una arquitectura moderna de frontend-backend
     - **Descripción**:: Yo como usuario necesito poder consultar un historial de modificaciones realizadas a los productos para rastrear cambios importantes.
     - **Estado**:: Incompleto
 
-15. - **Historia de usuario**:: GES-152
-    - **Autor**::
+15. - **Historia de usuario**:: GES-131
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Yo como usuario necesito poder determinar cual es el stock mínimo de un producto para que se dispare la alerta de bajas existencias de producto
+    - **Estado**:: Completo
+
+16. - **Historia de usuario**:: GES-152
+    - **Autor**:: Juan Pablo Cardona Bedoya
     - **Descripción**:: Yo como administrador necesito asignar diferentes roles a los usuarios para delimitar sus funciones dentro del sistema.
-    - **Estado**:: Incompleto
+    - **Estado**:: Completo
 
-16. - **Historia de usuario**:: GES-159
-    - **Autor**::
+17. - **Historia de usuario**:: GES-159
+    - **Autor**:: Luis Pablo Goez Sepulveda
     - **Descripción**:: Yo como administrador necesito escanear una etiqueta RFID de un lote para que el sistema registre automáticamente los productos que contiene.
-    - **Estado**:: Incompleto
+    - **Estado**:: Completo
 
-17. - **Historia de usuario**:: GES-160
-    - **Autor**::
+18. - **Historia de usuario**:: GES-160
+    - **Autor**:: Luis Pablo Goez Sepulveda
     - **Descripción**:: Yo como usuario necesito que el sistema valide si el lote ya fue ingresado anteriormente para evitar duplicados en el inventario.
-    - **Estado**:: Incompleto
+    - **Estado**:: Completo
+
+19. - **Historia de usuario**:: GES-162
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Yo como cajero necesito buscar un producto desde el sistema para añadirlo a la venta.
+    - **Estado**:: Completo
+
+20. - **Historia de usuario**:: GES-164
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Yo como cajero necesito emitir un comprobante de venta que muestre productos, cantidades, precios y totales.
+    - **Estado**:: Completo
+
+21. - **Historia de usuario**:: GES-166
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador necesito generar un reporte general del inventario con las unidades disponibles por producto.
+    - **Estado**:: Completo
+
+22. - **Historia de usuario**:: GES-167
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador necesito generar un reporte de productos vendidos por categoría para entender la demanda.
+    - **Estado**:: Completo
+
+23. - **Historia de usuario**:: GES-168
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador necesito generar un reporte de ingresos por lote para conocer cuándo y qué productos entraron.
+    - **Estado**:: Completo
+
+24. - **Historia de usuario**:: GES-200
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: La aplicación debe validar en menos de 2 segundos si las credenciales son correctas al iniciar sesión.
+    - **Estado**:: Por validar
+
+25. - **Historia de usuario**:: GES-201
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Solo los usuarios con el rol de administrador deben tener acceso a las funciones de registro, eliminación y asignación de roles.
+    - **Estado**:: Completo
+
+26. - **Historia de usuario**:: GES-202
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: La búsqueda de productos en el inventario debe completarse en menos de 2 segundos.
+    - **Estado**:: Por validar
+
+27. - **Historia de usuario**:: GES-203
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Las alertas de stock mínimo deben mostrarse al menos una vez por día hasta que se reponga el inventario.
+    - **Estado**:: Completo
+
+28. - **Historia de usuario**:: GES-204
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: El sistema debe evitar la sobreventa mediante validación en tiempo real del inventario actualizado.
+    - **Estado**:: Completo
+
+29. - **Historia de usuario**:: GES-205
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Las operaciones de venta deben estar disponibles únicamente para usuarios con el rol de cajero o administrador.
+    - **Estado**:: Completo
+
+30. - **Historia de usuario**:: GES-206
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Todos los reportes deben poder exportarse a formato Excel.
+    - **Estado**:: Completo
+
+31. - **Historia de usuario**:: GES-208
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: La aplicación debe ser accesible desde cualquier navegador moderno.
+    - **Estado**:: Completo
+
+32. - **Historia de usuario**:: GES-210
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: La interfaz debe estar diseñada para ser intuitiva y usable por personal sin conocimientos técnicos avanzados.
+    - **Estado**:: Completo
+
+33. - **Historia de usuario**:: GES-211
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador, quiero calcular y visualizar el stock consolidado por producto, para tener claridad del inventario real disponible.
+    - **Estado**:: Completo
+
+34. - **Historia de usuario**:: GES-212
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como administrador, quiero exportar el consolidado a PDF o Excel, para compartir y analizar la información fácilmente.
+    - **Estado**:: Completo
+
+35. - **Historia de usuario**:: GES-213
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Yo como administrador, quiero que se registre automáticamente un snapshot del inventario al final de cada mes, para contar con un historial confiable de cierres mensuales.
+    - **Estado**:: Completo
+
+36. - **Historia de usuario**:: GES-214
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Yo como administrador, quiero que los movimientos anteriores al cierre mensual queden bloqueados y no puedan ser modificados, para preservar la integridad del inventario histórico.
+    - **Estado**:: Completo
+
+37. - **Historia de usuario**:: GES-215
+    - **Autor**:: Felipe Villa Jaramillo
+    - **Descripción**:: Yo como administrador, quiero consultar y exportar los cierres mensuales históricos, para realizar análisis y auditorías de inventario.
+    - **Estado**:: Completo
+
+38. - **Historia de usuario**:: GES-216
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como usuario necesito acceder a la vista de inventario para consultar los productos disponibles y sus atributos.
+    - **Estado**:: Completo
+
+39. - **Historia de usuario**:: GES-217
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como administrador necesito acceder a la vista de reportes para generar, filtrar y visualizar la información consolidada.
+    - **Estado**:: Completo
+
+40. - **Historia de usuario**:: GES-218
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como administrador necesito acceder a la vista de clientes para gestionar y consultar la información de los clientes registrados.
+    - **Estado**:: Completo
+
+41. - **Historia de usuario**:: GES-219
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como administrador necesito acceder a la vista de proveedores para gestionar la información de los proveedores y validar sus estados.
+    - **Estado**:: Completo
+
+42. - **Historia de usuario**:: GES-220
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como usuario necesito acceder a la vista de historial de movimientos para consultar entradas y salidas de productos.
+    - **Estado**:: Completo
+
+43. - **Historia de usuario**:: GES-221
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como usuario/administrador necesito acceder a la vista de compras para registrar y consultar las compras realizadas.
+    - **Estado**:: Completo
+
+44. - **Historia de usuario**:: GES-222
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como usuario/administrador necesito acceder a la vista de alertas para monitorear el estado crítico de productos y actuar a tiempo.
+    - **Estado**:: Completo
+
+45. - **Historia de usuario**:: GES-223
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como administrador necesito acceder a la vista de proyecciones para consultar predicciones de inventario y tomar decisiones estratégicas.
+    - **Estado**:: Completo
+
+46. - **Historia de usuario**:: GES-224
+    - **Autor**:: Luis Pablo Goez Sepulveda
+    - **Descripción**:: Yo como usuario/administrador necesito acceder al dashboard para visualizar métricas clave y tener una visión general del sistema.
+    - **Estado**:: Completo
+
+47. - **Historia de usuario**:: GES-225
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como usuario necesito acceder a la vista de inicio de sesión para ingresar al sistema con mis credenciales y gestionar el inventario.
+    - **Estado**:: Completo
+
+48. - **Historia de usuario**:: GES-226
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como usuario necesito acceder a la vista de registro de usuarios para crear mi nueva cuenta.
+    - **Estado**:: Completo
+
+49. - **Historia de usuario**:: GES-227
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como usuario necesito acceder a la vista de recuperación de contraseña para restablecer mi clave en caso de olvido y recuperar el acceso al sistema.
+    - **Estado**:: Completo
+
+50. - **Historia de usuario**:: GES-228
+    - **Autor**:: Juan Pablo Cardona Bedoya
+    - **Descripción**:: Yo como usuario necesito poder cambiar la contraseña de mi cuenta para tener control de la misma.
+    - **Estado**:: Completo
+
+---
+
+**Equipo de Desarrollo**: GeStock Development Team  
+**Versión**: 1.0.0  
+**Fecha**: Noviembre 2025
 
 18. - **Historia de usuario**:: GES-162
     - **Autor**::
